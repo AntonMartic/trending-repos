@@ -1,35 +1,83 @@
 import { TopBar } from "@/components/TopBar";
 import { fetchRepositories } from "@/services/github/githubApi";
-import { useEffect } from "react";
-import { ScrollView, StyleSheet, View } from "react-native";
+import { useEffect, useState } from "react";
+import {
+  ActivityIndicator,
+  FlatList,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
+
+import { RepoListItem } from "../components/RepoListItem";
+
+import { Repository } from "@/services/github/githubApi";
 
 export default function Index() {
+  const [repos, setRepos] = useState<Repository[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+
   useEffect(() => {
-    const runTest = async () => {
+    const loadRepos = async () => {
+      setIsLoading(true);
+      setError(null);
       try {
         const response = await fetchRepositories();
+        setRepos(response);
         console.log("API Response Data:", response);
       } catch (e) {
+        setError("Error: Failed to load repositories.");
         console.error("Error during API call in useEffect:", e);
+      } finally {
+        setIsLoading(false);
       }
     };
 
-    runTest();
+    loadRepos();
   }, []);
+
+  const renderContent = () => {
+    if (isLoading) {
+      return (
+        <View>
+          <ActivityIndicator size="small" color="#f0f6fc" />
+          <Text>Loading repositories...</Text>
+        </View>
+      );
+    }
+
+    if (error) {
+      return (
+        <View>
+          <Text>{error}</Text>
+        </View>
+      );
+    }
+
+    if (repos.length === 0) {
+      return (
+        <View>
+          <Text>No repositories found!</Text>
+        </View>
+      );
+    }
+
+    return (
+      <FlatList
+        data={repos}
+        keyExtractor={(item) => String(item.id)}
+        renderItem={({ item, index }) => (
+          <RepoListItem repo={item} rank={index + 1} />
+        )}
+      />
+    );
+  };
 
   return (
     <View style={styles.body}>
       <TopBar />
-      <ScrollView style={styles.scroll}>
-        <View
-          style={{
-            height: 1000,
-            width: "100%",
-            borderColor: "#3d444d",
-            borderWidth: 1,
-            borderRadius: 5,
-          }}></View>
-      </ScrollView>
+      <View style={styles.scroll}>{renderContent()}</View>
     </View>
   );
 }

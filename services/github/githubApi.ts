@@ -2,6 +2,51 @@ import { Octokit } from "octokit";
 
 // https://docs.github.com/en/rest/guides/scripting-with-the-rest-api-and-javascript?apiVersion=2022-11-28
 
+export type Repository = {
+  id: number;
+  fullName: string;
+  repoName: string;
+  description: string | null;
+  url: string;
+  stars: number;
+  forks: number;
+  topics: string[];
+  licenseName: string | null;
+  mainLanguage: string | null;
+  createdAt: Date;
+};
+
+export type RawRepository = {
+  id: number;
+  full_name: string;
+  name: string;
+  description: string | null;
+  html_url: string;
+  stargazers_count: number;
+  forks_count: number;
+  license: { name: string } | null;
+  language: string | null;
+  languages_url: string;
+  created_at: string;
+  topics: string[];
+};
+
+function shapeRepoData(repo: RawRepository): Repository {
+  return {
+    id: repo.id,
+    fullName: repo.full_name,
+    repoName: repo.name,
+    description: repo.description,
+    url: repo.html_url,
+    stars: repo.stargazers_count,
+    forks: repo.forks_count,
+    topics: repo.topics,
+    licenseName: repo.license ? repo.license.name : null,
+    mainLanguage: repo.language,
+    createdAt: new Date(repo.created_at),
+  };
+}
+
 function getOctokitInstance() {
   const token = process.env.EXPO_PUBLIC_GITHUB_TOKEN;
 
@@ -15,17 +60,11 @@ function getOctokitInstance() {
   });
 }
 
-/*
-const octokit = new Octokit({
-  auth: process.env.EXPO_PUBLIC_GITHUB_TOKEN,
-});
-*/
-
-export async function fetchRepositories() {
+export async function fetchRepositories(): Promise<Repository[]> {
   const octokit = getOctokitInstance();
 
   if (!octokit) {
-    return;
+    return [];
   }
 
   try {
@@ -38,7 +77,11 @@ export async function fetchRepositories() {
         "X-GitHub-Api-Version": "2022-11-28",
       },
     });
-    return response;
+
+    const rawItems = response.data.items as RawRepository[];
+    const shapedRepos: Repository[] = rawItems.map(shapeRepoData);
+
+    return shapedRepos;
   } catch (error) {
     console.error("Octokit Request Failed:", error);
     throw error;
