@@ -68,8 +68,14 @@ export default function Index() {
         data={repos}
         keyExtractor={(item) => String(item.id)}
         renderItem={({ item, index }) => (
-          <RepoListItem repo={item} rank={index + 1} />
+          <RepoListItem
+            repo={item}
+            rank={index + 1}
+            isFirst={index === 0}
+            isLast={index === repos.length - 1}
+          />
         )}
+        style={styles.repoList}
       />
     );
   };
@@ -89,6 +95,8 @@ const styles = StyleSheet.create({
   },
   scroll: {
     flex: 1,
+  },
+  repoList: {
     padding: 20,
   },
 });
