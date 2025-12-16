@@ -18,12 +18,15 @@ export default function Index() {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
+  const [language, setLanguage] = useState<string>("python");
+  const [period, setPeriod] = useState<string>("");
+
   useEffect(() => {
     const loadRepos = async () => {
       setIsLoading(true);
       setError(null);
       try {
-        const response = await fetchRepositories();
+        const response = await fetchRepositories(language, period);
         setRepos(response);
         console.log("API Response Data:", response);
       } catch (e) {
@@ -35,7 +38,7 @@ export default function Index() {
     };
 
     loadRepos();
-  }, []);
+  }, [language, period]);
 
   const renderContent = () => {
     if (isLoading) {
@@ -82,7 +85,12 @@ export default function Index() {
 
   return (
     <View style={styles.body}>
-      <TopBar />
+      <TopBar
+        language={language}
+        setLanguage={setLanguage}
+        period={period}
+        setPeriod={setPeriod}
+      />
       <View style={styles.scroll}>{renderContent()}</View>
     </View>
   );

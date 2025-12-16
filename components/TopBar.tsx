@@ -1,18 +1,39 @@
 import { DropDown } from "@/components/DropDown";
+import { LANGUAGES, TIME_PERIODS } from "@/utils/utils";
 import { StyleSheet, Text, View } from "react-native";
 
-export function TopBar() {
+type TopBarProps = {
+  language: string;
+  setLanguage: (val: string) => void;
+  period: string;
+  setPeriod: (val: string) => void;
+};
+
+export function TopBar({
+  language,
+  setLanguage,
+  period,
+  setPeriod,
+}: TopBarProps) {
   return (
     <View style={styles.topbar}>
       <Text style={styles.header}>🚀 Trending GitHub repos.</Text>
       <View style={styles.filters}>
         <View style={styles.filterItem}>
           <Text style={styles.label}>Language</Text>
-          <DropDown />
+          <DropDown
+            selectedValue={language}
+            onValueChange={setLanguage}
+            data={LANGUAGES}
+          />
         </View>
         <View style={styles.filterItem}>
           <Text style={styles.label}>Date</Text>
-          <DropDown />
+          <DropDown
+            selectedValue={period}
+            onValueChange={setPeriod}
+            data={TIME_PERIODS}
+          />
         </View>
       </View>
     </View>

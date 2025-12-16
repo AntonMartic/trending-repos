@@ -1,3 +1,4 @@
+import { getDateXDaysAgo } from "@/utils/utils";
 import { Octokit } from "octokit";
 
 // https://docs.github.com/en/rest/guides/scripting-with-the-rest-api-and-javascript?apiVersion=2022-11-28
@@ -60,16 +61,27 @@ function getOctokitInstance() {
   });
 }
 
-export async function fetchRepositories(): Promise<Repository[]> {
+export async function fetchRepositories(
+  language: string = "",
+  period: string = ""
+): Promise<Repository[]> {
   const octokit = getOctokitInstance();
 
-  if (!octokit) {
-    return [];
+  if (!octokit) return [];
+
+  let query = language ? `language:${encodeURIComponent(language)}` : "";
+
+  if (period != "") {
+    const dateString = getDateXDaysAgo(parseInt(period));
+
+    query += query ? ` created:>${dateString}` : `created:>${dateString}`;
   }
+
+  if (!query) query = "stars:>0";
 
   try {
     const response = await octokit.request("GET /search/repositories", {
-      q: "language:python",
+      q: query,
       sort: "stars",
       order: "desc",
       per_page: 10,

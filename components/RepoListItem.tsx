@@ -1,4 +1,5 @@
 import { Repository } from "@/services/github/githubApi";
+import { LANGUAGES } from "@/utils/utils";
 import { Book, GitFork, Star } from "lucide-react-native";
 import { StyleSheet, Text, View } from "react-native";
 
@@ -27,6 +28,11 @@ export function RepoListItem({
     },
   });
 
+  const langConfig = LANGUAGES.find(
+    (l) => l.value.toLowerCase() === repo.mainLanguage?.toLowerCase()
+  );
+  const dotColor = langConfig?.color;
+
   return (
     <View
       style={[
@@ -43,7 +49,14 @@ export function RepoListItem({
       </View>
       <Text style={{ color: "#9198a1" }}>{repo.description}</Text>
       <View style={{ flexDirection: "row", gap: 28, alignItems: "center" }}>
-        <View>
+        <View style={{ flexDirection: "row", gap: 8, alignItems: "center" }}>
+          <View
+            style={{
+              backgroundColor: dotColor,
+              borderRadius: 6,
+              width: 12,
+              height: 12,
+            }}></View>
           <Text style={{ color: "#9198a1" }}>{repo.mainLanguage}</Text>
         </View>
         <View style={{ flexDirection: "row", gap: 8, alignItems: "center" }}>

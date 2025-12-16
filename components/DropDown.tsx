@@ -1,13 +1,26 @@
+import { DropdownData } from "@/utils/utils";
+import { Picker } from "@react-native-picker/picker";
 import { StyleSheet } from "react-native";
 
-import { Picker } from "@react-native-picker/picker";
+type DropDownProps = {
+  selectedValue: string;
+  onValueChange: (value: string) => void;
+  data: DropdownData[];
+};
 
-export function DropDown() {
+export function DropDown({
+  selectedValue,
+  onValueChange,
+  data,
+}: DropDownProps) {
   return (
-    <Picker style={styles.container}>
-      <Picker.Item label="TypeScript" />
-      <Picker.Item label="C++" />
-      <Picker.Item label="Python" />
+    <Picker
+      style={styles.container}
+      selectedValue={selectedValue}
+      onValueChange={onValueChange}>
+      {data.map((item) => (
+        <Picker.Item label={item.label} value={item.value} />
+      ))}
     </Picker>
   );
 }
