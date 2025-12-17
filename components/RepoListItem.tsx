@@ -1,5 +1,6 @@
 import { Repository } from "@/services/github/githubApi";
 import { LANGUAGES } from "@/utils/utils";
+import { Link } from "expo-router";
 import { Book, GitFork, Star } from "lucide-react-native";
 import { StyleSheet, Text, View } from "react-native";
 
@@ -41,11 +42,18 @@ export function RepoListItem({
         isLast && conditionalStyles.lastItem,
       ]}>
       <View>
-        <View style={{ flexDirection: "row", gap: 8, alignItems: "center" }}>
-          <Text style={{ color: "#f0f6fc", fontSize: 18 }}>{rank}.</Text>
-          <Book color="#9198a1" size={16} />
-          <Text style={styles.link}>{repo.fullName}</Text>
-        </View>
+        <Link
+          href={{
+            pathname: "./repo/[id]",
+            params: { repo: JSON.stringify(repo) },
+          }}
+          asChild>
+          <View style={{ flexDirection: "row", gap: 8, alignItems: "center" }}>
+            <Text style={{ color: "#f0f6fc", fontSize: 18 }}>{rank}.</Text>
+            <Book color="#9198a1" size={16} />
+            <Text style={styles.link}>{repo.fullName}</Text>
+          </View>
+        </Link>
       </View>
       <Text style={{ color: "#9198a1" }}>{repo.description}</Text>
       <View style={{ flexDirection: "row", gap: 28, alignItems: "center" }}>

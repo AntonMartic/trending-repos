@@ -17,7 +17,6 @@ export function TopBar({
 }: TopBarProps) {
   return (
     <View style={styles.topbar}>
-      <Text style={styles.header}>🚀 Trending GitHub repos.</Text>
       <View style={styles.filters}>
         <View style={styles.filterItem}>
           <Text style={styles.label}>Language</Text>
@@ -47,10 +46,6 @@ const styles = StyleSheet.create({
     gap: 20,
     borderBottomColor: "#3d444d",
     borderBottomWidth: 1,
-  },
-  header: {
-    color: "#f0f6fc",
-    fontSize: 26,
   },
   filters: {
     display: "flex",

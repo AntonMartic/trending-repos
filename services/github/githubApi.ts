@@ -69,7 +69,7 @@ export async function fetchRepositories(
 
   if (!octokit) return [];
 
-  let query = language ? `language:${encodeURIComponent(language)}` : "";
+  let query = language ? `language:"${language}"` : "";
 
   if (period != "") {
     const dateString = getDateXDaysAgo(parseInt(period));

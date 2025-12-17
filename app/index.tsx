@@ -43,25 +43,43 @@ export default function Index() {
   const renderContent = () => {
     if (isLoading) {
       return (
-        <View>
+        <View
+          style={{
+            flex: 1,
+            justifyContent: "center",
+            alignItems: "center",
+            gap: 20,
+          }}>
           <ActivityIndicator size="small" color="#f0f6fc" />
-          <Text>Loading repositories...</Text>
+          <Text style={{ color: "#f0f6fc" }}>Loading repositories...</Text>
         </View>
       );
     }
 
     if (error) {
       return (
-        <View>
-          <Text>{error}</Text>
+        <View
+          style={{
+            flex: 1,
+            justifyContent: "center",
+            alignItems: "center",
+            gap: 20,
+          }}>
+          <Text style={{ color: "#cc2f13ff" }}>{error}</Text>
         </View>
       );
     }
 
     if (repos.length === 0) {
       return (
-        <View>
-          <Text>No repositories found!</Text>
+        <View
+          style={{
+            flex: 1,
+            justifyContent: "center",
+            alignItems: "center",
+            gap: 20,
+          }}>
+          <Text style={{ color: "#f0f6fc" }}>No repositories found!</Text>
         </View>
       );
     }
